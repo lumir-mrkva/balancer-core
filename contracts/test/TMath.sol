@@ -20,6 +20,28 @@ import "../BNum.sol";
 
 contract TMath is BMath {
 
+    event Output(uint);
+
+    function measureCalcOutGivenIn(
+        uint tokenBalanceIn,
+        uint tokenWeightIn,
+        uint tokenBalanceOut,
+        uint tokenWeightOut,
+        uint tokenAmountIn,
+        uint swapFee
+    )
+    public
+    {
+        uint result = calcOutGivenIn(
+            tokenBalanceIn,
+            tokenWeightIn,
+            tokenBalanceOut,
+            tokenWeightOut,
+            tokenAmountIn,
+            swapFee);
+        emit Output(result);
+    }
+
     function calc_btoi(uint a) external pure returns (uint) {
         return btoi(a);
     }

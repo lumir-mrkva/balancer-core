@@ -1,3 +1,20 @@
+# balancer math tester
+
+install dependencies
+
+```
+npm install
+```
+
+run test
+
+```
+TEST_CASES=../math-tester/data/testdata.txt npm run math-tester
+```
+
+----------------------------------------------------------------
+
+
 <p align=center>
 <img width="128px" src="https://balancer-labs.github.io/pebbles/images/pebbles-pad.256w.png" alt="balancer pebbles logo"/>
 </p>

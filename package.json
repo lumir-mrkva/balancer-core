@@ -5,9 +5,11 @@
     "license": "GPL-3.0-only",
     "description": "Balancer Core Contracts and ABI",
     "scripts": {
+        "math-tester": "run-p testrpc test:math",
         "compile": "truffle compile",
-        "testrpc": "ganache-cli --deterministic --gasLimit 10000000",
+        "testrpc": "ganache-cli --deterministic --gasLimit 10000000 >/dev/null",
         "test": "truffle test",
+        "test:math": "wait-on tcp:8545 && npm test test/math.js",
         "test:verbose": "VERBOSE=true truffle test",
         "coverage": "yarn solidity-coverage",
         "lint": "eslint .",
@@ -22,6 +24,8 @@
     },
     "homepage": "https://github.com/balancer-labs/balancer-core#readme",
     "devDependencies": {
+        "npm-run-all": "^4.1.5",
+        "wait-on": "^4.0.2",
         "chai": "^4.2.0",
         "coveralls": "^3.0.8",
         "eslint": "^6.7.1",
