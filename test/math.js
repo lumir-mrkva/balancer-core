@@ -1,9 +1,11 @@
 const truffleAssert = require('truffle-assertions');
+const { calcOutGivenIn, calcInGivenOut, calcRelativeDiff } = require('../lib/calc_comparisons');
 const fs = require('fs');
 const TMath = artifacts.require('TMath');
 
 contract('math-tester', async () => {
   const MAX = web3.utils.toTwosComplement(-1);
+  const { fromWei, toWei, toBN } = web3.utils;
 
   let tmath, cases;
 
@@ -23,28 +25,22 @@ contract('math-tester', async () => {
       console.log('Test:', i++);
       console.log('Case:', input);
       const [tokenBalanceIn, tokenBalanceOut, tokenAmountIn, tokenWeightIn, tokenWeightOut, swapFee = 0] = input;
+      const params = [tokenBalanceIn, tokenWeightIn, tokenBalanceOut, tokenWeightOut, tokenAmountIn, swapFee];
+      const expected = Math.floor(calcOutGivenIn(...params.map(n => Number(fromWei(n)))) * 10**18);
+      console.log('Expected:', expected);
       let output, gas;
       try {
-        gas = await tmath.methods['measureCalcOutGivenIn(uint256,uint256,uint256,uint256,uint256,uint256)']
-          .estimateGas(
-            tokenBalanceIn,
-            tokenWeightIn,
-            tokenBalanceOut,
-            tokenWeightOut,
-            tokenAmountIn,
-            swapFee
-          );
+        gas = await tmath
+          .methods['measureCalcOutGivenIn(uint256,uint256,uint256,uint256,uint256,uint256)']
+          .estimateGas(...params);
+        output = await tmath.calcOutGivenIn(...params);
+        output = output.toNumber();
+        console.log('Output:  ', output);
+        const diff = toBN(expected).sub(toBN(output)).toNumber();
+        if (diff !== 0) {
+          console.log('Diff:', diff);
+        }
         console.log('Gas:', gas);
-        output = await tmath.calcOutGivenIn(
-          tokenBalanceIn,
-          tokenWeightIn,
-          tokenBalanceOut,
-          tokenWeightOut,
-          tokenAmountIn,
-          swapFee
-        );
-        output = output.toString();
-        console.log(output);
       } catch (e) {
         output = e.message;
         console.error(e.message);
