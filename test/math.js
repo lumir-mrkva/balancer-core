@@ -26,7 +26,7 @@ contract('math-tester', async () => {
       console.log('Case:', input);
       const [tokenBalanceIn, tokenBalanceOut, tokenAmountIn, tokenWeightIn, tokenWeightOut, swapFee = 0] = input;
       const params = [tokenBalanceIn, tokenWeightIn, tokenBalanceOut, tokenWeightOut, tokenAmountIn, swapFee];
-      const expected = Math.floor(calcOutGivenIn(...params.map(n => Number(fromWei(n)))) * 10**18);
+      const expected = Math.round(calcOutGivenIn(...params.map(n => Number(fromWei(n)))) * 10**18);
       console.log('Expected:', expected);
       let output, gas;
       try {
